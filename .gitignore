@@ -33,6 +33,7 @@ local.properties
 .cxx/
 *.keystore
 !debug.keystore
+android/gradlew.bat
 
 # node.js
 #
