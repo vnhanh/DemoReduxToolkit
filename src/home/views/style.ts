@@ -27,16 +27,17 @@ export const styles = StyleSheet.create({
   wrapperButton: {
     alignSelf: 'center',
     width: '70%',
-    paddingVertical: 12,
-    borderRadius: 8,
-    backgroundColor: colors.secondary,
     marginVertical: 12,
+    backgroundColor: colors.secondary,
+    borderRadius: 8,
+    overflow: 'hidden',
   },
   contentButton: {
     color: colors.textSurface,
     textAlign: 'center',
     fontSize: fonts.size.button,
     fontWeight: '600',
+    paddingVertical: 12,
   },
   footer: {
     flex: 1,
