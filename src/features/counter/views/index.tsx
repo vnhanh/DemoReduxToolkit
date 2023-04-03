@@ -1,9 +1,9 @@
 import React from "react"
 import { SafeAreaView, Text, TouchableHighlight, View } from "react-native"
-import { useAppDispatch, useAppSelector } from "../../redux/hook"
+import { useAppDispatch, useAppSelector } from "../../../app/hook"
 import { styles } from "./style"
 import { decrement, increment, selectCount } from "../slice/counterSlice"
-import colors from "../../common/colors"
+import colors from "../../../common/colors"
 
 export function Counter(): JSX.Element {
   const count = useAppSelector(selectCount)

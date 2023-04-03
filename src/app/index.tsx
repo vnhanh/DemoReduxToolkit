@@ -13,8 +13,8 @@ import { Provider } from "react-redux"
 
 import { Colors } from "react-native/Libraries/NewAppScreen"
 
-import { Counter } from "../home/views"
-import { store } from "../redux/store"
+import { Counter } from "../features/counter/views"
+import { store } from "./store"
 
 type SectionProps = PropsWithChildren<{
   title: string;
