@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
   },
-  counter: {
+  todos: {
     color: colors.textBackground,
     fontSize: fonts.size.title,
     fontWeight: '500',

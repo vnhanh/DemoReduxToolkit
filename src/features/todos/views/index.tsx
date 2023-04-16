@@ -2,7 +2,7 @@ import React from "react"
 import { SafeAreaView, Text, TouchableHighlight, View } from "react-native"
 import { useAppDispatch, useAppSelector } from "../../../app/hook"
 import { styles } from "./style"
-import { decrement, increment, selectCount } from "../slice/counterSlice"
+import { decrement, increment, selectCount } from "../slice/todosSlice"
 import colors from "../../../common/colors"
 
 export function Counter(): JSX.Element {
@@ -20,7 +20,7 @@ export function Counter(): JSX.Element {
   return (
     <SafeAreaView style={ styles.container }>
       <View style={ styles.header }>
-        <Text style={ styles.counter }>Counter: { count }</Text>
+        <Text style={ styles.todos }>Counter: { count }</Text>
       </View>
       <View style={ styles.body }>
         <View style={ styles.wrapperButton }>
