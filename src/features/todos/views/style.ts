@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
   list: {
     width: '100%',
   },
-  item: {
+  itemWrapper: {
     flex: 1,
     marginVertical: 8,
     marginHorizontal: 16,
@@ -37,9 +37,20 @@ export const styles = StyleSheet.create({
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 4 },
   },
+  itemInner: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  itemContent: {
+    flex: 1,
+    justifyContent: "center",
+  },
   itemText: {
     fontSize: fonts.size.text,
     fontWeight: '500',
+  },
+  itemCheckBox: {
+    
   },
   footer: {
     flex: 1,

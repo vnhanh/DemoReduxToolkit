@@ -7,13 +7,13 @@
 
 import type { PropsWithChildren } from "react"
 import React from "react"
-import { SafeAreaView, useColorScheme } from "react-native"
+import { useColorScheme } from "react-native"
 
 import { Provider } from "react-redux"
 
 import { Colors } from "react-native/Libraries/NewAppScreen"
 
-import { Counter } from "../features/todos/views"
+import { ToDo } from "../features/todos/views"
 import { store } from "./store"
 
 type SectionProps = PropsWithChildren<{
@@ -54,8 +54,8 @@ function Index(): JSX.Element {
   }
 
   return (
-    <Provider store={store}>
-      <Counter />
+    <Provider store={ store }>
+      <ToDo />
     </Provider>
   )
 }

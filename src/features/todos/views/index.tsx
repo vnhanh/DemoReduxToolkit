@@ -1,9 +1,11 @@
-import React from "react"
-import { FlatList, SafeAreaView, Text, View } from "react-native"
+import React, { useEffect, useState } from "react"
+import { FlatList, SafeAreaView, Text, TouchableHighlight, TouchableOpacity, View } from "react-native"
 import CheckBox from "@react-native-community/checkbox"
 import { useAppDispatch, useAppSelector } from "../../../app/hook"
 import { styles } from "./style"
-import { toggleTodoStatus, todos } from "../slice/todosSlice"
+import { todoList } from "../slice/todosSlice"
+import colors from "../../../common/colors"
+import { Todo } from "../data/todo"
 
 type ItemProps = {
   testID: string,
@@ -13,23 +15,40 @@ type ItemProps = {
 }
 
 const Item = ( item : ItemProps ) => {
+  const textColor = (item.checked) ? colors.primary : colors.gray500
+
   return  (
-    <View style={ styles.item } >
-      <Text style={ styles.itemText }>{ item.name }</Text>
-      <CheckBox
-        value={ item.checked }
-        testID={ item.testID }
-      />
+    <View style={ styles.itemWrapper } >
+      <TouchableOpacity onPress={ item.onPress }>
+        <View style={ styles.itemInner }>
+          <View style={ styles.itemContent }>
+            <Text style={ { ...styles.itemText, color: textColor } }>{ item.name }</Text>
+          </View>
+          <CheckBox
+            value={ item.checked }
+            testID={ item.testID }
+            tintColors={ { true: colors.primary, false: colors.gray500 } } // Android
+            tintColor={ colors.gray500 } //iOS - color of unchecked
+            onCheckColor={ colors.primary } // iOS - check mark color
+            onTintColor={ colors.primary } // iOS - border color on checked status
+            style={ styles.itemCheckBox }
+          />
+        </View>
+      </TouchableOpacity>
     </View>
   )
 }
 
-export function Counter(): JSX.Element {
-  const list = useAppSelector(todos)
+export function ToDo(): JSX.Element {
   const dispatch = useAppDispatch()
+  const [data, setData] = useState(useAppSelector(todoList))
 
-  const onPressIncrement = () => {
-    dispatch(toggleTodoStatus())
+  const onTapItem = (item: Todo) => {
+    item.isFinished = !item.isFinished
+
+    setData([
+      ...data
+    ])
   }
 
   return (
@@ -39,7 +58,7 @@ export function Counter(): JSX.Element {
       </View>
       <View style={ styles.body }>
         <FlatList 
-          data={ list }
+          data={ data }
           renderItem={ ({ item }) => {
             return (
               <Item 
@@ -47,7 +66,7 @@ export function Counter(): JSX.Element {
                 name={ item.name } 
                 checked={ item.isFinished } 
                 onPress={ () => {
-                  console.log('Alan - press item')
+                  onTapItem(item)
                 } } />
             )
           } }

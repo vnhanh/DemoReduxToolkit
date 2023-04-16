@@ -39,6 +39,6 @@ export const todosSlice = createSlice({
 
 export const { getList, toggleTodoStatus } = todosSlice.actions
 
-export const todos = (state: RootState) => state.todos.list
+export const todoList = (state: RootState) => state.todos.list
 
 export default todosSlice.reducer

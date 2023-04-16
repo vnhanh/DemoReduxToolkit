@@ -19,6 +19,7 @@ const colors = {
   indigo500: '#3F51B5',
   indigo600: '#3949AB',
   indigo700: '#303F9F',
+  gray500: '#9e9e9e',
 }
 
 export default colors
