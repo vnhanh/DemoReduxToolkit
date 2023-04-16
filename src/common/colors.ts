@@ -10,6 +10,8 @@ const colors = {
   background: '#eaeaea',
   surface: '#ffffff',
   error: '#d50026',
+  textTitle: '#4E31AA',
+  textTitleContrast: '#ffffff',
   textBackground: '#000000',
   textSurface: '#ffffff',
   textError: '#ffffff',

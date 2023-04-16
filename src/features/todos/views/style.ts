@@ -6,15 +6,14 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    padding: 16,
   },
   header: {
-    flex: 4,
-    flexDirection: 'column',
-    justifyContent: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: colors.primary,
   },
-  todos: {
-    color: colors.textBackground,
+  title: {
+    color: colors.textTitleContrast,
     fontSize: fonts.size.title,
     fontWeight: '500',
     textAlign: 'center',
@@ -22,22 +21,25 @@ export const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   body: {
+    flex: 4,
+  },
+  list: {
+    width: '100%',
+  },
+  item: {
     flex: 1,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    padding: 8,
+    borderWidth: 1,
+    borderColor: colors.primary,
+    borderRadius: 4,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 4 },
   },
-  wrapperButton: {
-    alignSelf: 'center',
-    width: '70%',
-    marginVertical: 12,
-    backgroundColor: colors.secondary,
-    borderRadius: 8,
-    overflow: 'hidden',
-  },
-  contentButton: {
-    color: colors.textSurface,
-    textAlign: 'center',
-    fontSize: fonts.size.button,
-    fontWeight: '600',
-    paddingVertical: 12,
+  itemText: {
+    fontSize: fonts.size.text,
+    fontWeight: '500',
   },
   footer: {
     flex: 1,

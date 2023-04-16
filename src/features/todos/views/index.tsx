@@ -1,38 +1,59 @@
 import React from "react"
-import { SafeAreaView, Text, TouchableHighlight, View } from "react-native"
+import { FlatList, SafeAreaView, Text, View } from "react-native"
+import CheckBox from "@react-native-community/checkbox"
 import { useAppDispatch, useAppSelector } from "../../../app/hook"
 import { styles } from "./style"
-import { decrement, increment, selectCount } from "../slice/todosSlice"
-import colors from "../../../common/colors"
+import { toggleTodoStatus, todos } from "../slice/todosSlice"
+
+type ItemProps = {
+  testID: string,
+  name: string,
+  checked: boolean,
+  onPress: () => void,
+}
+
+const Item = ( item : ItemProps ) => {
+  return  (
+    <View style={ styles.item } >
+      <Text style={ styles.itemText }>{ item.name }</Text>
+      <CheckBox
+        value={ item.checked }
+        testID={ item.testID }
+      />
+    </View>
+  )
+}
 
 export function Counter(): JSX.Element {
-  const count = useAppSelector(selectCount)
+  const list = useAppSelector(todos)
   const dispatch = useAppDispatch()
 
   const onPressIncrement = () => {
-    dispatch(increment())
-  }
-
-  const onPressDecrement = () => {
-    dispatch(decrement())
+    dispatch(toggleTodoStatus())
   }
 
   return (
     <SafeAreaView style={ styles.container }>
       <View style={ styles.header }>
-        <Text style={ styles.todos }>Counter: { count }</Text>
+        <Text style={ styles.title }>TODOs</Text>
       </View>
       <View style={ styles.body }>
-        <View style={ styles.wrapperButton }>
-          <TouchableHighlight onPress={ onPressIncrement } activeOpacity={ 0.5 } underlayColor={ colors.secondaryVariant }>
-            <Text style={ styles.contentButton }>INCREMENT</Text>
-          </TouchableHighlight>
-        </View>
-        <View style={ styles.wrapperButton }>
-          <TouchableHighlight onPress={ onPressDecrement } activeOpacity={ 0.5 } underlayColor={ colors.secondaryVariant }>
-            <Text style={ styles.contentButton }>DECREMENT</Text>
-          </TouchableHighlight>
-        </View>
+        <FlatList 
+          data={ list }
+          renderItem={ ({ item }) => {
+            return (
+              <Item 
+                testID={ item.id }
+                name={ item.name } 
+                checked={ item.isFinished } 
+                onPress={ () => {
+                  console.log('Alan - press item')
+                } } />
+            )
+          } }
+          keyExtractor={ item => item.id } 
+          style={ styles.list }
+        />
       </View>
       <View style={ styles.footer } />
     </SafeAreaView>

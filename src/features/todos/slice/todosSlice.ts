@@ -8,7 +8,18 @@ interface ToDosState {
 }
 
 const initialState: ToDosState = {
-  list: [],
+  list: [
+    {
+      id: '00001',
+      name: 'sweeping',
+      isFinished: false,
+    },
+    {
+      id: '00002',
+      name: 'fan cleaning',
+      isFinished: false,
+    },
+  ],
 }
 
 export const todosSlice = createSlice({
@@ -16,13 +27,18 @@ export const todosSlice = createSlice({
   initialState,
   reducers: {
     getList: (state) => {
+      console.log('Alan - running getList action')
+
       state.list = []
+    },
+    toggleTodoStatus: () => {
+      console.log('Alan - running toggleTodoStatus')
     },
   },
 })
 
-export const { getList } = todosSlice.actions
+export const { getList, toggleTodoStatus } = todosSlice.actions
 
-export const selectCount = (state: RootState) => state.todos.list
+export const todos = (state: RootState) => state.todos.list
 
 export default todosSlice.reducer
