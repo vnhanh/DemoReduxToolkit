@@ -52,6 +52,21 @@ export const styles = StyleSheet.create({
   itemCheckBox: {
     
   },
+  floatingBtn: {
+    position: 'absolute',
+    width: 64,
+    height: 64,
+    bottom: 36,
+    right: 36,
+    backgroundColor: colors.primary,
+    borderRadius: 64,
+    justifyContent: 'center',
+  },
+  floatingBtnText: {
+    color: colors.white,
+    textAlign: 'center',
+    fontSize: fonts.size.buttonSuperBig
+  },
   footer: {
     flex: 1,
   }

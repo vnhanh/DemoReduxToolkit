@@ -1,44 +1,43 @@
-import { createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from "@reduxjs/toolkit"
-import type { RootState } from "../../../app/store"
+import { createEntityAdapter, createSlice, configureStore } from '@reduxjs/toolkit'
+import { RootState } from "../../../app/store"
 import { Todo } from "../data/todo"
 
 interface ToDosState {
   list: Todo[],
 }
 
-const initialState: ToDosState = {
-  list: [
-    {
-      id: '00001',
-      name: 'sweeping',
-      isFinished: false,
-    },
-    {
-      id: '00002',
-      name: 'fan cleaning',
-      isFinished: false,
-    },
-  ],
-}
+const todosAdapter = createEntityAdapter<Todo>({
+  selectId: ( todo ) => todo.id,
+  sortComparer: (a,b) => a.name.localeCompare(b.name),
+})
 
 export const todosSlice = createSlice({
   name: 'todos',
-  initialState,
+  initialState: todosAdapter.getInitialState(),
   reducers: {
-    getList: (state) => {
-      console.log('Alan - running getList action')
+    addTodo: todosAdapter.addOne,
+    // loadTodos(state) {
+      
+    // },
+    // getTodos(state, action) {
+    //   todosAdapter.setAll(state, action.payload)
+    // },
+    updateTodo: todosAdapter.updateOne,
+    // toggleTodoStatus: (state, action) => {
+    //   const todoItem = action.payload
 
-      state.list = []
-    },
-    toggleTodoStatus: () => {
-      console.log('Alan - running toggleTodoStatus')
-    },
+    //   todoItem.isFinished = !todoItem.isFinished
+
+    // },
   },
 })
 
-export const { getList, toggleTodoStatus } = todosSlice.actions
+// export const { addTodo, loadTodos, getTodos, updateTodo, toggleTodoStatus } = todosSlice.actions
+export const { addTodo, updateTodo } = todosSlice.actions
 
-export const todoList = (state: RootState) => state.todos.list
+export const {
+  selectAll: getTodos,
+  selectTotal: getTotalTodos,
+} = todosAdapter.getSelectors((state: RootState) => state.todos)
 
 export default todosSlice.reducer

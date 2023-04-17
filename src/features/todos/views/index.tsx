@@ -1,11 +1,20 @@
-import React, { useEffect, useState } from "react"
-import { FlatList, SafeAreaView, Text, TouchableHighlight, TouchableOpacity, View } from "react-native"
+import React from "react"
+import { FlatList, SafeAreaView, Text, TouchableOpacity, View } from "react-native"
 import CheckBox from "@react-native-community/checkbox"
+import Icon from 'react-native-vector-icons/FontAwesome5'
 import { useAppDispatch, useAppSelector } from "../../../app/hook"
 import { styles } from "./style"
-import { todoList } from "../slice/todosSlice"
+import { addTodo, getTodos, updateTodo } from "../slice/todosSlice"
 import colors from "../../../common/colors"
 import { Todo } from "../data/todo"
+
+let index = 0
+
+const randomId = () => {
+  index++
+
+  return index.toString()
+}
 
 type ItemProps = {
   testID: string,
@@ -41,14 +50,24 @@ const Item = ( item : ItemProps ) => {
 
 export function ToDo(): JSX.Element {
   const dispatch = useAppDispatch()
-  const [data, setData] = useState(useAppSelector(todoList))
+  const data = useAppSelector(getTodos)
 
-  const onTapItem = (item: Todo) => {
-    item.isFinished = !item.isFinished
+  console.log('data: ', JSON.stringify(data))
 
-    setData([
-      ...data
-    ])
+  const onTapTodoItem = (item: Todo) => {
+    console.log('onTapTodoItem()')
+
+    dispatch(updateTodo({
+      id: item.id,
+      changes: {
+        isFinished: !item.isFinished,
+      },
+    }))
+  }
+
+  const onTapAddButton = () => {
+    console.log('onTapAddButton()')
+    dispatch(addTodo({ id: randomId(), name: 'abc', isFinished: false }))
   }
 
   return (
@@ -60,13 +79,15 @@ export function ToDo(): JSX.Element {
         <FlatList 
           data={ data }
           renderItem={ ({ item }) => {
+            console.log('Alan -renderItem() - item ', JSON.stringify(item))
+
             return (
               <Item 
                 testID={ item.id }
                 name={ item.name } 
                 checked={ item.isFinished } 
                 onPress={ () => {
-                  onTapItem(item)
+                  onTapTodoItem(item)
                 } } />
             )
           } }
@@ -74,7 +95,13 @@ export function ToDo(): JSX.Element {
           style={ styles.list }
         />
       </View>
-      <View style={ styles.footer } />
+      <View style={ styles.footer }>
+        <TouchableOpacity
+          onPress={ onTapAddButton }
+          style={ styles.floatingBtn }>
+          <Text style={ styles.floatingBtnText }>+</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   )
 }
