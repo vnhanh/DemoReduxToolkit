@@ -12,7 +12,6 @@ export const styles = StyleSheet.create({
     paddingVertical: 8,
     backgroundColor: colors.primary,
     flexDirection: 'row',
-    alignContent: 'center',
   },
   title: {
     color: colors.textTitleContrast,
@@ -21,6 +20,13 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     flex: 1,
     paddingVertical: 8,
+  },
+  deleteBtn: {
+    height: '100%',
+    position: 'absolute',
+    top: 8,
+    right: 16,
+    justifyContent: 'center',
   },
   body: {
     flex: 1,
@@ -34,10 +40,21 @@ export const styles = StyleSheet.create({
     width: '100%',
     marginTop: 16,
   },
+  // wrap item and delete button
+  line: {
+    flex: 1,
+    flexDirection: 'row',
+    marginVertical: 8,
+    paddingHorizontal: 16,
+  },
+  lineDeleteBtn: {
+    width: 36,
+    height: '100%',
+    justifyContent: 'center',
+    marginRight: 16,
+  },
   itemWrapper: {
     flex: 1,
-    marginVertical: 8,
-    marginHorizontal: 16,
     padding: 8,
     borderWidth: 1,
     borderColor: colors.primary,

@@ -1,14 +1,8 @@
-import { createEntityAdapter, createSlice, configureStore, createAsyncThunk } from "@reduxjs/toolkit";
+import { createEntityAdapter, createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "../../../app/store"
 import { Todo } from "../domain/todo"
-import { Animated, AppState } from "react-native";
-import delay = Animated.delay;
 import { randomId } from "../../../common/util"
 import Status from "../../../common/status"
-
-interface ToDosState {
-  list: Todo[],
-}
 
 const todosAdapter = createEntityAdapter<Todo>({
   selectId: ( todo ) => todo.id,
@@ -33,8 +27,6 @@ export const fetchTodos = createAsyncThunk('todos', async () => {
     ]
   }
 
-  console.log('Alan - return response data with res ', res)
-
   return response.data
 })
 
@@ -43,12 +35,8 @@ export const todosSlice = createSlice({
   initialState: initialState,
   reducers: {
     addTodo: todosAdapter.addOne,
-    // loadTodos(state) {
-    // },
-    // getTodos(state, action) {
-    //   todosAdapter.setAll(state, action.payload)
-    // },
     updateTodo: todosAdapter.updateOne,
+    deleteTodo: todosAdapter.removeOne,
   },
   extraReducers: (builder) => {
     builder
@@ -69,7 +57,7 @@ export const todosSlice = createSlice({
   }
 })
 
-export const { addTodo, updateTodo } = todosSlice.actions
+export const { addTodo, updateTodo, deleteTodo } = todosSlice.actions
 
 export const {
   selectAll: getTodos,
