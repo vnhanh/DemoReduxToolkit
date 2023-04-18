@@ -28,7 +28,7 @@ const Item = ( item : ItemProps ) => {
     <View style={ styles.line }>
       { item.onPressDeleteBtn && (
           <TouchableOpacity onPress={ item.onPressDeleteBtn } style={ styles.lineDeleteBtn } >
-            <Icon name="delete" size={ 36 } color={ colors.red800 } />
+            <Icon name="delete" size={ 36 } color={ colors.error } />
           </TouchableOpacity>
       ) }
       <View style={ styles.itemWrapper } >

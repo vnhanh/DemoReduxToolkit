@@ -9,7 +9,7 @@ const colors = {
   black: '#000000',
   background: '#eaeaea',
   surface: '#ffffff',
-  error: '#d50026',
+  error: '#d84315',
   textTitle: '#4E31AA',
   textTitleContrast: '#ffffff',
   textBackground: '#000000',
@@ -21,7 +21,6 @@ const colors = {
   indigo700: '#303F9F',
   gray500: '#9e9e9e',
   red500: '#ff5722',
-  red800: '#d84315',
 }
 
 export default colors
