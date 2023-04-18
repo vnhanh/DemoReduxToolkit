@@ -25,6 +25,7 @@ export const styles = StyleSheet.create({
   },
   list: {
     width: '100%',
+    marginTop: 16,
   },
   itemWrapper: {
     flex: 1,
@@ -49,8 +50,11 @@ export const styles = StyleSheet.create({
     fontSize: fonts.size.text,
     fontWeight: '500',
   },
-  itemCheckBox: {
-    
+  itemStrikeThrough: {
+    width: '100%',
+    height: 1,
+    position: 'absolute',
+    backgroundColor: colors.gray500,
   },
   floatingBtn: {
     position: 'absolute',
@@ -66,8 +70,5 @@ export const styles = StyleSheet.create({
     color: colors.white,
     textAlign: 'center',
     fontSize: fonts.size.buttonSuperBig
-  },
-  footer: {
-    flex: 1,
   }
 })

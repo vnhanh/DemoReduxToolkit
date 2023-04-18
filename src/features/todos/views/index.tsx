@@ -1,7 +1,6 @@
 import React from "react"
 import { FlatList, SafeAreaView, Text, TouchableOpacity, View } from "react-native"
 import CheckBox from "@react-native-community/checkbox"
-import Icon from 'react-native-vector-icons/FontAwesome5'
 import { useAppDispatch, useAppSelector } from "../../../app/hook"
 import { styles } from "./style"
 import { addTodo, getTodos, updateTodo } from "../slice/todosSlice"
@@ -16,6 +15,9 @@ const randomId = () => {
   return index.toString()
 }
 
+let localTodoIndex = -1
+const localTodos = ["cleaning", "cooking", "fishing", "hanging out", "hiking", "learning English", "shopping", "studying", "sweeping"]
+
 type ItemProps = {
   testID: string,
   name: string,
@@ -24,7 +26,7 @@ type ItemProps = {
 }
 
 const Item = ( item : ItemProps ) => {
-  const textColor = (item.checked) ? colors.primary : colors.gray500
+  const textColor = (item.checked) ? colors.gray500 : colors.primary
 
   return  (
     <View style={ styles.itemWrapper } >
@@ -32,15 +34,16 @@ const Item = ( item : ItemProps ) => {
         <View style={ styles.itemInner }>
           <View style={ styles.itemContent }>
             <Text style={ { ...styles.itemText, color: textColor } }>{ item.name }</Text>
+            { item.checked && <View style={ styles.itemStrikeThrough } /> }
           </View>
           <CheckBox
             value={ item.checked }
             testID={ item.testID }
-            tintColors={ { true: colors.primary, false: colors.gray500 } } // Android
-            tintColor={ colors.gray500 } //iOS - color of unchecked
-            onCheckColor={ colors.primary } // iOS - check mark color
-            onTintColor={ colors.primary } // iOS - border color on checked status
-            style={ styles.itemCheckBox }
+            tintColors={ { true: colors.gray500, false: colors.primary } } // Android
+            tintColor={ colors.primary } //iOS - color of unchecked
+            onCheckColor={ colors.gray500 } // iOS - check mark color
+            onTintColor={ colors.gray500 } // iOS - border color on checked status
+            onValueChange={ item.onPress }
           />
         </View>
       </TouchableOpacity>
@@ -52,11 +55,7 @@ export function ToDo(): JSX.Element {
   const dispatch = useAppDispatch()
   const data = useAppSelector(getTodos)
 
-  console.log('data: ', JSON.stringify(data))
-
   const onTapTodoItem = (item: Todo) => {
-    console.log('onTapTodoItem()')
-
     dispatch(updateTodo({
       id: item.id,
       changes: {
@@ -66,8 +65,12 @@ export function ToDo(): JSX.Element {
   }
 
   const onTapAddButton = () => {
-    console.log('onTapAddButton()')
-    dispatch(addTodo({ id: randomId(), name: 'abc', isFinished: false }))
+    localTodoIndex = localTodoIndex +1
+    if (localTodoIndex >= localTodos.length) {
+      localTodoIndex = 0
+    }
+
+    dispatch(addTodo({ id: randomId(), name: localTodos[localTodoIndex], isFinished: false }))
   }
 
   return (
@@ -76,26 +79,22 @@ export function ToDo(): JSX.Element {
         <Text style={ styles.title }>TODOs</Text>
       </View>
       <View style={ styles.body }>
-        <FlatList 
+        <FlatList
           data={ data }
           renderItem={ ({ item }) => {
-            console.log('Alan -renderItem() - item ', JSON.stringify(item))
-
             return (
-              <Item 
+              <Item
                 testID={ item.id }
-                name={ item.name } 
-                checked={ item.isFinished } 
+                name={ item.name }
+                checked={ item.isFinished }
                 onPress={ () => {
                   onTapTodoItem(item)
                 } } />
             )
           } }
-          keyExtractor={ item => item.id } 
+          keyExtractor={ item => item.id }
           style={ styles.list }
         />
-      </View>
-      <View style={ styles.footer }>
         <TouchableOpacity
           onPress={ onTapAddButton }
           style={ styles.floatingBtn }>
