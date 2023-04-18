@@ -11,17 +11,24 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     backgroundColor: colors.primary,
+    flexDirection: 'row',
+    alignContent: 'center',
   },
   title: {
     color: colors.textTitleContrast,
     fontSize: fonts.size.title,
     fontWeight: '500',
     textAlign: 'center',
-    width: '100%',
+    flex: 1,
     paddingVertical: 8,
   },
   body: {
-    flex: 4,
+    flex: 1,
+  },
+  loadingWrapper: {
+    flex: 1,
+    alignContent: 'center',
+    justifyContent: 'center',
   },
   list: {
     width: '100%',
