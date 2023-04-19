@@ -3,7 +3,7 @@ import { FlatList, SafeAreaView, Text, TouchableOpacity, View, ActivityIndicator
 import CheckBox from "@react-native-community/checkbox"
 import { useAppDispatch, useAppSelector } from "../../../app/hook"
 import { styles } from "./style"
-import {addTodo, deleteTodo, fetchTodos, getStatus, getTodos, updateTodo} from "../data/todosSlice"
+import { addTodo, deleteTodo, fetchTodos, getStatus, getTodos, updateTodo } from "../data/todosSlice"
 import colors from "../../../common/colors"
 import { Todo } from "../domain/todo"
 import { randomId } from "../../../common/util"
@@ -27,9 +27,9 @@ const Item = ( item : ItemProps ) => {
   return  (
     <View style={ styles.line }>
       { item.onPressDeleteBtn && (
-          <TouchableOpacity onPress={ item.onPressDeleteBtn } style={ styles.lineDeleteBtn } >
-            <Icon name="delete" size={ 36 } color={ colors.error } />
-          </TouchableOpacity>
+        <TouchableOpacity onPress={ item.onPressDeleteBtn } style={ styles.lineDeleteBtn } >
+          <Icon name="delete" size={ 36 } color={ colors.error } />
+        </TouchableOpacity>
       ) }
       <View style={ styles.itemWrapper } >
         <TouchableOpacity onPress={ item.onPressItem }>
@@ -39,13 +39,13 @@ const Item = ( item : ItemProps ) => {
               { item.checked && <View style={ styles.itemStrikeThrough } /> }
             </View>
             <CheckBox
-                value={ item.checked }
-                testID={ item.testID }
-                tintColors={ { true: colors.gray500, false: colors.primary } } // Android
-                tintColor={ colors.primary } //iOS - color of unchecked
-                onCheckColor={ colors.gray500 } // iOS - check mark color
-                onTintColor={ colors.gray500 } // iOS - border color on checked status
-                onValueChange={ item.onPressItem }
+              value={ item.checked }
+              testID={ item.testID }
+              tintColors={ { true: colors.gray500, false: colors.primary } } // Android
+              tintColor={ colors.primary } //iOS - color of unchecked
+              onCheckColor={ colors.gray500 } // iOS - check mark color
+              onTintColor={ colors.gray500 } // iOS - border color on checked status
+              onValueChange={ item.onPressItem }
             />
           </View>
         </TouchableOpacity>
@@ -119,20 +119,20 @@ export function ToDo(): JSX.Element {
               renderItem={ ({ item }) => {
                 if (selecting) {
                   return (
-                      <Item
-                          testID={ item.id }
-                          name={ item.name }
-                          checked={ item.isFinished }
-                          onPressItem={ () => onTapTodoItem(item) }
-                          onPressDeleteBtn={ () => onTapDeleteTodoButton(item)}/>
+                    <Item
+                      testID={ item.id }
+                      name={ item.name }
+                      checked={ item.isFinished }
+                      onPressItem={ () => onTapTodoItem(item) }
+                      onPressDeleteBtn={ () => onTapDeleteTodoButton(item) }/>
                   )
                 } else {
                   return (
-                      <Item
-                          testID={ item.id }
-                          name={ item.name }
-                          checked={ item.isFinished }
-                          onPressItem={ () => onTapTodoItem(item) } />
+                    <Item
+                      testID={ item.id }
+                      name={ item.name }
+                      checked={ item.isFinished }
+                      onPressItem={ () => onTapTodoItem(item) } />
                   )
                 }
               } }
