@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { FlatList, SafeAreaView, Text, TouchableOpacity, View, ActivityIndicator } from "react-native"
 import CheckBox from "@react-native-community/checkbox"
 import { useAppDispatch, useAppSelector } from "../../../app/hook"
+import { RealmContext, RealmProvider } from "../../../database/configureRealm"
 import { styles } from "./style"
 import { addTodo, deleteTodo, fetchTodos, updateTodo } from "../data/todoSlice"
 import { getStatus, getTodos } from "../data/todoSelector"
@@ -140,29 +141,31 @@ export function ToDo(): JSX.Element {
 
   return (
     <SafeAreaView style={ styles.container }>
-      <View style={ styles.header }>
-        <Text style={ styles.title }>TODOs</Text>
-        <TouchableOpacity onPress={ onTapMenuDeleteButton } style={ styles.deleteBtn } >
-          { selecting && <Icon name="delete" size={ 30 } color={ colors.red500 } /> }
-          { !selecting && <Icon name="delete" size={ 30 } color={ colors.white } /> }
-        </TouchableOpacity>
-      </View>
-      <View style={ styles.body }>
-        {
-          status === Status.LOADING && renderLoadingView()
-        }
-        {
-          status === Status.FAILED && renderFailedCase()
-        }
-        {
-          status === Status.SUCCEEDED && renderList()
-        }
-        <TouchableOpacity
-          onPress={ onTapAddButton }
-          style={ styles.floatingBtn }>
-          <Text style={ styles.floatingBtnText }>+</Text>
-        </TouchableOpacity>
-      </View>
+      <RealmProvider>
+        <View style={ styles.header }>
+          <Text style={ styles.title }>TODOs</Text>
+          <TouchableOpacity onPress={ onTapMenuDeleteButton } style={ styles.deleteBtn } >
+            { selecting && <Icon name="delete" size={ 30 } color={ colors.red500 } /> }
+            { !selecting && <Icon name="delete" size={ 30 } color={ colors.white } /> }
+          </TouchableOpacity>
+        </View>
+        <View style={ styles.body }>
+          {
+            status === Status.LOADING && renderLoadingView()
+          }
+          {
+            status === Status.FAILED && renderFailedCase()
+          }
+          {
+            status === Status.SUCCEEDED && renderList()
+          }
+          <TouchableOpacity
+            onPress={ onTapAddButton }
+            style={ styles.floatingBtn }>
+            <Text style={ styles.floatingBtnText }>+</Text>
+          </TouchableOpacity>
+        </View>
+      </RealmProvider>
     </SafeAreaView>
   )
 }
