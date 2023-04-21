@@ -36,6 +36,16 @@ export const styles = StyleSheet.create({
     alignContent: 'center',
     justifyContent: 'center',
   },
+  errorBannerWrapper: {
+    position: 'absolute',
+    width: '90%',
+    marginVertical: 16,
+    padding: 8,
+    borderWidth: 1,
+    borderRadius: 16,
+    borderColor: colors.yellow200,
+    backgroundColor: colors.yellow200,
+  },
   errorBanner: {
     color: colors.red500,
     fontSize: fonts.size.bannerError,

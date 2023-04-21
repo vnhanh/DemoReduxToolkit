@@ -10,6 +10,7 @@ import { Todo } from "../domain/todo"
 import { randomId } from "../../../common/util"
 import Status from "../../../common/status"
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import BannerError from "./components/bannerError"
 
 let localTodoIndex = -1
 const localTodos = ["cleaning", "cooking", "fishing", "hanging out", "hiking", "learning English", "shopping", "studying", "sweeping"]
@@ -100,6 +101,43 @@ export function ToDo(): JSX.Element {
     </View>
   )
 
+  const renderList = () => (
+    <FlatList
+      data={ data }
+      renderItem={ ({ item }) => {
+        if (selecting) {
+          return (
+            <Item
+              testID={ item.id }
+              name={ item.name }
+              checked={ item.isFinished }
+              onPressItem={ () => onTapTodoItem(item) }
+              onPressDeleteBtn={ () => onTapDeleteTodoButton(item) }/>
+          )
+        } else {
+          return (
+            <Item
+              testID={ item.id }
+              name={ item.name }
+              checked={ item.isFinished }
+              onPressItem={ () => onTapTodoItem(item) } />
+          )
+        }
+      } }
+      keyExtractor={ item => item.id }
+      style={ styles.list }
+    />
+  )
+
+  const renderFailedCase = () => {
+    return (
+      <View>
+        <BannerError />
+        { renderList() }
+      </View>
+    )
+  }
+
   return (
     <SafeAreaView style={ styles.container }>
       <View style={ styles.header }>
@@ -114,36 +152,10 @@ export function ToDo(): JSX.Element {
           status === Status.LOADING && renderLoadingView()
         }
         {
-          status === Status.FAILED && <Text style={ styles.errorBanner }>Cannot fetch remote data</Text>
+          status === Status.FAILED && renderFailedCase()
         }
         {
-          status === Status.SUCCEEDED && (
-            <FlatList
-              data={ data }
-              renderItem={ ({ item }) => {
-                if (selecting) {
-                  return (
-                    <Item
-                      testID={ item.id }
-                      name={ item.name }
-                      checked={ item.isFinished }
-                      onPressItem={ () => onTapTodoItem(item) }
-                      onPressDeleteBtn={ () => onTapDeleteTodoButton(item) }/>
-                  )
-                } else {
-                  return (
-                    <Item
-                      testID={ item.id }
-                      name={ item.name }
-                      checked={ item.isFinished }
-                      onPressItem={ () => onTapTodoItem(item) } />
-                  )
-                }
-              } }
-              keyExtractor={ item => item.id }
-              style={ styles.list }
-            />
-          )
+          status === Status.SUCCEEDED && renderList()
         }
         <TouchableOpacity
           onPress={ onTapAddButton }

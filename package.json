@@ -7,7 +7,7 @@
     "clean-android": "cd android && rm -Rf build && rm -Rf app/build && cd ../",
     "ios": "react-native run-ios",
     "build-ios": "yarn clean-ios && cd ios && pod install && cd ../",
-    "clean-ios": "cd ios && rm -Rf Pods && rm -Rf Podfile.lock && rm -Rf build && rm -Rf DemoReduxToolkit.xcworkspace && cd ../",
+    "clean-ios": "cd ios && rm -Rf Pods && rm -Rf Podfile.lock && rm -Rf build && cd ../",
     "refresh": "yarn clean-ios && yarn clean-android && rm -Rf yarn.lock && rm -Rf node_modules && yarn",
     "refresh-ios": "yarn clean-ios && yarn clean-android && rm -Rf yarn.lock && rm -Rf node_modules && yarn && yarn build-ios",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
