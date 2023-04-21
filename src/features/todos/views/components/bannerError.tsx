@@ -1,12 +1,12 @@
 import React from "react"
 import { Text } from "react-native"
-import FadeInView from "../../../../components/fadeAnimView"
+import TransRightToLeftView from "../../../../components/transitionRightToLeftView"
 import { styles } from '../style'
 
 const BannerError = () => (
-  <FadeInView style={ styles.errorBannerWrapper }>
+  <TransRightToLeftView style={ styles.errorBannerWrapper }>
     <Text style={ styles.errorBanner }>Cannot fetch remote data</Text>
-  </FadeInView>
+  </TransRightToLeftView>
 )
 
 export default BannerError

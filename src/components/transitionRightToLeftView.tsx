@@ -3,9 +3,9 @@ import { ViewStyle, Animated, Dimensions } from "react-native"
 
 const windowWidth = Dimensions.get('window').width
 
-type FadeInViewProps = PropsWithChildren<{ style: ViewStyle }>
+type TransRightToLeftViewProps = PropsWithChildren<{ style: ViewStyle }>
 
-const FadeInView: React.FC<FadeInViewProps> = props => {
+const TransRightToLeftView: React.FC<TransRightToLeftViewProps> = props => {
   const fadeAnim = useRef(new Animated.Value(windowWidth)).current
 
   useEffect(() => {
@@ -27,4 +27,4 @@ const FadeInView: React.FC<FadeInViewProps> = props => {
   )
 }
 
-export default FadeInView
+export default TransRightToLeftView
