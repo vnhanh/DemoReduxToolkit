@@ -1,31 +1,24 @@
-import { createEntityAdapter, createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createEntityAdapter, createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+import axios from "axios"
 import { RootState } from "../../../app/store"
-import { Todo } from "../domain/todo"
-import { randomId } from "../../../common/util"
 import Status from "../../../common/status"
+import { Todo } from "../domain/todo"
+import { BASE_IP } from "../../../app/base"
 
-const todosAdapter = createEntityAdapter<Todo>({
+export const todosAdapter = createEntityAdapter<Todo>({
   selectId: ( todo ) => todo.id,
   sortComparer: (a,b) => a.name.localeCompare(b.name),
 })
 
 const initialState = todosAdapter.getInitialState({
   status: Status.IDLE,
+  error: '',
 })
 
 export const fetchTodos = createAsyncThunk('todos', async () => {
-  // fake calling api in 3 seconds
-  await new Promise((resolve, reject) => setTimeout(() => resolve(''), 3000))
-
-  const response = {
-    'data': [
-      {
-        id: randomId(),
-        name: 'Learning Redux Toolkit',
-        isFinished: false,
-      }
-    ]
-  }
+  const url = `http://${BASE_IP}:8080/todos`
+  const response = await axios.get(url)
+  console.log('Alan - get response of list of todos ', JSON.stringify(response.data))
 
   return response.data
 })
@@ -47,23 +40,20 @@ export const todosSlice = createSlice({
       .addCase(fetchTodos.fulfilled, (state, action) => {
         state.status = Status.SUCCEEDED
         todosAdapter.upsertMany(state, action.payload)
-        console.log('Alan - fetchTodos.fulfilled ', state)
+        console.log('Alan - fetchTodos.fulfilled ', JSON.stringify(action.payload))
       })
       .addCase(fetchTodos.rejected, (state, action) => {
-        console.log('Alan - fetchTodos.rejected')
+        const errMsg = action.error.message
+        console.log('Alan - fetchTodos.rejected - state ', state)
         state.status = Status.FAILED
-        // state.error = action.error.message
+        
+        if (errMsg) {
+          state.error = errMsg
+        }
       })
   }
 })
 
 export const { addTodo, updateTodo, deleteTodo } = todosSlice.actions
-
-export const {
-  selectAll: getTodos,
-  selectTotal: getTotalTodos,
-} = todosAdapter.getSelectors((state: RootState) => state.todos)
-
-export const getStatus = (state: RootState) => state.todos.status
 
 export default todosSlice.reducer

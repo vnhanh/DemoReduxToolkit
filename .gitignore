@@ -41,7 +41,6 @@ ios/.xcode.env.local
 /ios/build/
 /vendor/bundle/
 /ios/Podfile.lock
-/ios/DemoReduxToolkit.xcworkspace
 
 # node.js
 #

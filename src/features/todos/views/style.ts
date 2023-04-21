@@ -36,6 +36,11 @@ export const styles = StyleSheet.create({
     alignContent: 'center',
     justifyContent: 'center',
   },
+  errorBanner: {
+    color: colors.red500,
+    fontSize: fonts.size.bannerError,
+    textAlign: 'center',
+  },
   list: {
     width: '100%',
     marginTop: 16,

@@ -3,7 +3,8 @@ import { FlatList, SafeAreaView, Text, TouchableOpacity, View, ActivityIndicator
 import CheckBox from "@react-native-community/checkbox"
 import { useAppDispatch, useAppSelector } from "../../../app/hook"
 import { styles } from "./style"
-import { addTodo, deleteTodo, fetchTodos, getStatus, getTodos, updateTodo } from "../data/todosSlice"
+import { addTodo, deleteTodo, fetchTodos, updateTodo } from "../data/todoSlice"
+import { getStatus, getTodos } from "../data/todoSelector"
 import colors from "../../../common/colors"
 import { Todo } from "../domain/todo"
 import { randomId } from "../../../common/util"
@@ -111,6 +112,9 @@ export function ToDo(): JSX.Element {
       <View style={ styles.body }>
         {
           status === Status.LOADING && renderLoadingView()
+        }
+        {
+          status === Status.FAILED && <Text style={ styles.errorBanner }>Cannot fetch remote data</Text>
         }
         {
           status === Status.SUCCEEDED && (
