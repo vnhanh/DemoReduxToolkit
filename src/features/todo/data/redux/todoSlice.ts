@@ -1,9 +1,8 @@
 import { createEntityAdapter, createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import axios from "axios"
-import { RootState } from "../../../app/store"
-import Status from "../../../common/status"
-import { Todo } from "../domain/todo"
-import { BASE_IP } from "../../../app/base"
+import Status from "../../../../common/status"
+import { Todo } from "../../domain/todo"
+import { BASE_IP } from "../../../../app/base"
 
 export const todosAdapter = createEntityAdapter<Todo>({
   selectId: ( todo ) => todo.id,

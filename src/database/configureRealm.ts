@@ -1,5 +1,5 @@
 import { createRealmContext } from "@realm/react"
-import ToDoRealm from "../features/todos/domain/todo.realm"
+import ToDoRealm from "../features/todo/domain/todo.realm.object"
 
 const realmConfig: Realm.Configuration = {
   schema: [

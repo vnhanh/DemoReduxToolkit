@@ -2,16 +2,18 @@ import React, { useEffect, useState } from "react"
 import { FlatList, SafeAreaView, Text, TouchableOpacity, View, ActivityIndicator } from "react-native"
 import CheckBox from "@react-native-community/checkbox"
 import { useAppDispatch, useAppSelector } from "../../../app/hook"
-import { RealmContext, RealmProvider } from "../../../database/configureRealm"
+import { useRealm } from "../../../database/configureRealm"
 import { styles } from "./style"
-import { addTodo, deleteTodo, fetchTodos, updateTodo } from "../data/todoSlice"
-import { getStatus, getTodos } from "../data/todoSelector"
+import { deleteTodo, fetchTodos, updateTodo } from "../data/redux/todoSlice"
+import { getStatus, getTodos } from "../data/redux/todoSelector"
 import colors from "../../../common/colors"
 import { Todo } from "../domain/todo"
 import { randomId } from "../../../common/util"
 import Status from "../../../common/status"
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import BannerError from "./components/bannerError"
+import BannerError from "./components/BannerError"
+import ToDoRealm, { TodoRealmObjectName } from "../domain/todo.realm.object"
+import addTodoRO from "../data/realm/createTodo.realm"
 
 let localTodoIndex = -1
 const localTodos = ["cleaning", "cooking", "fishing", "hanging out", "hiking", "learning English", "shopping", "studying", "sweeping"]
@@ -59,6 +61,7 @@ const Item = ( item : ItemProps ) => {
 
 export function ToDo(): JSX.Element {
   const dispatch = useAppDispatch()
+  const realm = useRealm()
   const data = useAppSelector(getTodos)
   const status = useAppSelector(getStatus)
 
@@ -85,7 +88,12 @@ export function ToDo(): JSX.Element {
       localTodoIndex = 0
     }
 
-    dispatch(addTodo({ id: randomId(), name: localTodos[localTodoIndex], isFinished: false }))
+    // dispatch(addTodo({ id: randomId(), name: localTodos[localTodoIndex], isFinished: false }))
+    realm.write(() => {
+      const todoRO = realm.create(TodoRealmObjectName, {
+        id: randomId(), name: localTodos[localTodoIndex], done: false
+      })
+    })
   }
 
   const onTapMenuDeleteButton = () => {
@@ -141,31 +149,29 @@ export function ToDo(): JSX.Element {
 
   return (
     <SafeAreaView style={ styles.container }>
-      <RealmProvider>
-        <View style={ styles.header }>
-          <Text style={ styles.title }>TODOs</Text>
-          <TouchableOpacity onPress={ onTapMenuDeleteButton } style={ styles.deleteBtn } >
-            { selecting && <Icon name="delete" size={ 30 } color={ colors.red500 } /> }
-            { !selecting && <Icon name="delete" size={ 30 } color={ colors.white } /> }
-          </TouchableOpacity>
-        </View>
-        <View style={ styles.body }>
-          {
-            status === Status.LOADING && renderLoadingView()
-          }
-          {
-            status === Status.FAILED && renderFailedCase()
-          }
-          {
-            status === Status.SUCCEEDED && renderList()
-          }
-          <TouchableOpacity
-            onPress={ onTapAddButton }
-            style={ styles.floatingBtn }>
-            <Text style={ styles.floatingBtnText }>+</Text>
-          </TouchableOpacity>
-        </View>
-      </RealmProvider>
+      <View style={ styles.header }>
+        <Text style={ styles.title }>TODOs</Text>
+        <TouchableOpacity onPress={ onTapMenuDeleteButton } style={ styles.deleteBtn } >
+          { selecting && <Icon name="delete" size={ 30 } color={ colors.red500 } /> }
+          { !selecting && <Icon name="delete" size={ 30 } color={ colors.white } /> }
+        </TouchableOpacity>
+      </View>
+      <View style={ styles.body }>
+        {
+          status === Status.LOADING && renderLoadingView()
+        }
+        {
+          status === Status.FAILED && renderFailedCase()
+        }
+        {
+          status === Status.SUCCEEDED && renderList()
+        }
+        <TouchableOpacity
+          onPress={ onTapAddButton }
+          style={ styles.floatingBtn }>
+          <Text style={ styles.floatingBtnText }>+</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   )
 }

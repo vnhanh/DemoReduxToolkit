@@ -1,18 +1,20 @@
 import Realm from 'realm'
 
+export const TodoRealmObjectName = 'Todo'
+
 class ToDoRealm extends Realm.Object<ToDoRealm> {
-  _id!: Realm.BSON.ObjectId
+  id!: string
   name!: string
   done!: boolean
 
   static schema = {
-    name: 'ToDo',
+    name: TodoRealmObjectName,
     properties: {
-      _id: 'objectId',
+      id: 'string',
       name: 'string',
       done: 'bool',
     },
-    primaryKey: '_id',
+    primaryKey: 'id',
   }
 }
 
