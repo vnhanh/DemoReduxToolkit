@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { FlatList, SafeAreaView, Text, TouchableOpacity, View, ActivityIndicator } from "react-native"
 import CheckBox from "@react-native-community/checkbox"
 import { useAppDispatch, useAppSelector } from "../../../app/hook"
-import { useRealm } from "../../../database/configureRealm"
+import { useObject, useQuery, useRealm } from "../../../database/configureRealm"
 import { styles } from "./style"
 import { deleteTodo, fetchTodos, updateTodo } from "../data/redux/todoSlice"
 import { getStatus, getTodos } from "../data/redux/todoSelector"
@@ -12,8 +12,9 @@ import { randomId } from "../../../common/util"
 import Status from "../../../common/status"
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import BannerError from "./components/BannerError"
-import ToDoRealm, { TodoRealmObjectName } from "../domain/todo.realm.object"
+import ToDoModel, { TodoRealmObjectName as TodoRealmModelName } from "../domain/todo.realm.model"
 import addTodoRO from "../data/realm/createTodo.realm"
+import { useSelector } from "react-redux"
 
 let localTodoIndex = -1
 const localTodos = ["cleaning", "cooking", "fishing", "hanging out", "hiking", "learning English", "shopping", "studying", "sweeping"]
@@ -64,7 +65,8 @@ export function ToDo(): JSX.Element {
   const realm = useRealm()
   const data = useAppSelector(getTodos)
   const status = useAppSelector(getStatus)
-
+  const todosInRealm = useQuery(TodoRealmModelName)
+  
   const [selecting, setSelecting] = useState(false)
 
   useEffect(() => {
@@ -89,12 +91,9 @@ export function ToDo(): JSX.Element {
     }
 
     // dispatch(addTodo({ id: randomId(), name: localTodos[localTodoIndex], isFinished: false }))
-    realm.write(() => {
-      const todoRO = realm.create(TodoRealmObjectName, {
-        id: randomId(), name: localTodos[localTodoIndex], done: false
-      })
-    })
+    // addTodoRO(randomId(), localTodos[localTodoIndex], false)
   }
+  console.log('Alan - query todos realm ', todosInRealm)
 
   const onTapMenuDeleteButton = () => {
     setSelecting(!selecting)

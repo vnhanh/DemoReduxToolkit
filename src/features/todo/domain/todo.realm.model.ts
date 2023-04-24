@@ -2,7 +2,7 @@ import Realm from 'realm'
 
 export const TodoRealmObjectName = 'Todo'
 
-class ToDoRealm extends Realm.Object<ToDoRealm> {
+class ToDoModel extends Realm.Object<ToDoModel> {
   id!: string
   name!: string
   done!: boolean
@@ -18,4 +18,4 @@ class ToDoRealm extends Realm.Object<ToDoRealm> {
   }
 }
 
-export default ToDoRealm
+export default ToDoModel

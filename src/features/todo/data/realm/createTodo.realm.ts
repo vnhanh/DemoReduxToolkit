@@ -1,23 +1,45 @@
-import { useEffect } from "react"
-import { useRealm } from "../../../../database/configureRealm"
-import ToDoRealm, { TodoRealmObjectName } from "../../domain/todo.realm.object"
+import Realm from "realm"
+import { TodoRealmObjectName } from "../../domain/todo.realm.model"
+import { realmConfig } from "../../../../database/configureRealm"
+import { isTodoResponse } from '../redux/todoSlice'
 
-const addTodoRO= (realm: Realm, realmObject: ToDoRealm) => {
-  console.log('Alan - running in createTodo.realm.ts')
+export const addTodoRealmObjects = (data: any) => new Promise((resolve, reject) => {
+  Realm.open(realmConfig)
+    .then((realm) => {
+      try {
+        realm.write(() => {
+          let success = true
+  
+          Object.entries(data).forEach(([key, value]) => {
+            if (isTodoResponse(value)) {
+              realm.create(TodoRealmObjectName, value)
+            } else {
+              success = false
+            }
+          })
+          resolve(success)
+        })
+      } catch (e) {
+        console.log('caught exception while writing database ', e)
+      }
+    })
+})
 
-  realm.write(()=> {
-    console.log('Alan - running realm.write()')
-  })
+/**
+ * This way can not run out of a component
+ */
+// const realm = new Realm({
+//   schema: [ToDoModel]
+// })
 
-  // realm.write(() => {
-  //   const createRealObjectResult = realm.create(TodoRealmObjectName, {
-  //     id: realmObject.id,
-  //     name: realmObject.name,
-  //     done: realmObject.done,
-  //   })
+// const addTodoRO= ( id: string, name: string, done: boolean) => {
+//   console.log('Alan - running in createTodo.realm.ts')
 
-  //   console.log('Alan - result of creating todo realm object ', createRealObjectResult)
-  // })
-}
-
-export default addTodoRO
+//   realm.write(() => {
+//     realm.create(TodoRealmObjectName, {
+//       id: id,
+//       name: name,
+//       done: done,
+//     })
+//   })
+// }
