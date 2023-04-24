@@ -1,21 +1,14 @@
-import { PropsWithChildren } from "react"
+import React from "react"
 import { RealmProvider } from "../database/configureRealm"
 
-type RealmHOCProps = PropsWithChildren<any>
-
-const RealmWrapper: React.ComponentType<RealmHOCProps> = props => {
-
-  return (
-    <RealmProvider>
-      { props.children }
-    </RealmProvider>
-  )
+const withRealmProvider = (Component: React.FunctionComponent<object>) => {
+  return function RealmProviderComponent() {
+    return (
+      <RealmProvider>
+        <Component />
+      </RealmProvider>
+    )
+  }
 }
 
-function Wrapper<T>(Component: React.FunctionComponent<T>): JSX.Element {
-  return (
-    <RealmProvider>
-      <Component />
-    </RealmProvider>
-  )
-}
+export default withRealmProvider

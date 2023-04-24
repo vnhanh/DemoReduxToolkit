@@ -3,9 +3,8 @@ import { todosAdapter } from "./todoSlice"
 
 
 export const {
-  selectAll: getTodos,
-  selectTotal: getTotalTodos,
-} = todosAdapter.getSelectors((state: RootState) => state.todos)
+  selectAll: getToDos,
+} = todosAdapter.getSelectors((state: RootState) => state.todo)
 
-export const getStatus = (state: RootState) => state.todos.status
-export const getError = (state: RootState) => state.todos.error
+export const getStatus = (state: RootState) => state.todo.status
+export const getError = (state: RootState) => state.todo.error

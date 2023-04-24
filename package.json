@@ -9,7 +9,7 @@
     "build-ios": "yarn clean-ios && cd ios && pod install && cd ../",
     "clean-ios": "cd ios && rm -Rf Pods && rm -Rf Podfile.lock && rm -Rf build && cd ../",
     "refresh": "yarn clean-ios && yarn clean-android && rm -Rf yarn.lock && rm -Rf node_modules && yarn",
-    "refresh-ios": "yarn clean-ios && yarn clean-android && rm -Rf yarn.lock && rm -Rf node_modules && yarn && yarn build-ios",
+    "refresh-build-ios": "yarn clean-ios && yarn clean-android && rm -Rf yarn.lock && rm -Rf node_modules && yarn && yarn build-ios",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint . --fix --ext .js,.jsx,.ts,.tsx",
     "start": "react-native start",
@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@react-native-community/checkbox": "^0.5.15",
+    "@react-native-community/netinfo": "^9.3.9",
     "@realm/react": "^0.4.3",
     "@reduxjs/toolkit": "^1.9.3",
     "axios": "^1.3.5",

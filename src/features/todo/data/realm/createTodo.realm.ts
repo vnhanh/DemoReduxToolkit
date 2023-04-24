@@ -1,5 +1,5 @@
 import Realm from "realm"
-import { TodoRealmObjectName } from "../../domain/todo.realm.model"
+import { TodoRealmName } from "../../domain/todo.realm.model"
 import { realmConfig } from "../../../../database/configureRealm"
 import { isTodoResponse } from '../redux/todoSlice'
 
@@ -12,7 +12,7 @@ export const addTodoRealmObjects = (data: any) => new Promise((resolve, reject) 
   
           Object.entries(data).forEach(([key, value]) => {
             if (isTodoResponse(value)) {
-              realm.create(TodoRealmObjectName, value)
+              realm.create(TodoRealmName, value)
             } else {
               success = false
             }

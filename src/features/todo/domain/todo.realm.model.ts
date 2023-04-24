@@ -1,6 +1,6 @@
 import Realm from 'realm'
 
-export const TodoRealmObjectName = 'Todo'
+export const TodoRealmName = 'Todo'
 
 class ToDoModel extends Realm.Object<ToDoModel> {
   id!: string
@@ -8,7 +8,7 @@ class ToDoModel extends Realm.Object<ToDoModel> {
   done!: boolean
 
   static schema = {
-    name: TodoRealmObjectName,
+    name: TodoRealmName,
     properties: {
       id: 'string',
       name: 'string',

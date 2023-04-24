@@ -1,17 +1,13 @@
 import React from "react"
-
 import { Provider } from "react-redux"
 
-import { ToDo } from "../features/todo/views"
 import { store } from "./store"
-import { RealmProvider } from "../database/configureRealm"
+import { ToDoComponent } from "../features/todo/views"
 
-function App(): JSX.Element {
+function App() {
   return (
     <Provider store={ store }>
-      <RealmProvider>
-        <ToDo />
-      </RealmProvider>
+      <ToDoComponent />
     </Provider>
   )
 }

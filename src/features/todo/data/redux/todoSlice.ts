@@ -29,7 +29,7 @@ export const fetchTodos = createAsyncThunk('todos', async () => {
   return response.data
 })
 
-export const todosSlice = createSlice({
+export const todoSlice = createSlice({
   name: 'todos',
   initialState: initialState,
   reducers: {
@@ -44,7 +44,7 @@ export const todosSlice = createSlice({
         console.log('Alan - fetchTodos.pending')
       })
       .addCase(fetchTodos.fulfilled, (state, action) => {
-        state.status = Status.SUCCEEDED
+        // state.status = Status.SUCCEEDED
         todosAdapter.upsertMany(state, action.payload)
 
         addTodoRealmObjects(action.payload)
@@ -59,7 +59,7 @@ export const todosSlice = createSlice({
       .addCase(fetchTodos.rejected, (state, action) => {
         const errMsg = action.error.message
         console.log('Alan - fetchTodos.rejected - state ', state)
-        state.status = Status.FAILED
+        // state.status = Status.FAILED
         
         if (errMsg) {
           state.error = errMsg
@@ -68,10 +68,10 @@ export const todosSlice = createSlice({
   }
 })
 
-export const { addTodo, updateTodo, deleteTodo } = todosSlice.actions
+export const { addTodo, updateTodo, deleteTodo } = todoSlice.actions
 
 export const isTodoResponse = (data: any): data is Todo => {
   return 'id' in data && 'name' in data && 'done' in data
 }
 
-export default todosSlice.reducer
+export default todoSlice.reducer

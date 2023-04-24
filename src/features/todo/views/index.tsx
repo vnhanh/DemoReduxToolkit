@@ -1,20 +1,23 @@
 import React, { useEffect, useState } from "react"
 import { FlatList, SafeAreaView, Text, TouchableOpacity, View, ActivityIndicator } from "react-native"
 import CheckBox from "@react-native-community/checkbox"
+import { compose } from "@reduxjs/toolkit"
 import { useAppDispatch, useAppSelector } from "../../../app/hook"
-import { useObject, useQuery, useRealm } from "../../../database/configureRealm"
+import { useQuery } from "../../../database/configureRealm"
 import { styles } from "./style"
-import { deleteTodo, fetchTodos, updateTodo } from "../data/redux/todoSlice"
-import { getStatus, getTodos } from "../data/redux/todoSelector"
+import { addTodo, deleteTodo, fetchTodos, updateTodo } from "../data/redux/todoSlice"
+import { getStatus, getToDos } from "../data/redux/todoSelector"
 import colors from "../../../common/colors"
 import { Todo } from "../domain/todo"
 import { randomId } from "../../../common/util"
 import Status from "../../../common/status"
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import BannerError from "./components/BannerError"
-import ToDoModel, { TodoRealmObjectName as TodoRealmModelName } from "../domain/todo.realm.model"
-import addTodoRO from "../data/realm/createTodo.realm"
-import { useSelector } from "react-redux"
+import { TodoRealmName } from "../domain/todo.realm.model"
+import { NetworkInfoChildProps, withNetworkInfo } from "../../../hoc/NetworkInfoHOC"
+import withRealmProvider from "../../../hoc/RealmHOC"
+import withLoading, { LoadingChildProps } from "../../../hoc/Loading.hoc"
+
 
 let localTodoIndex = -1
 const localTodos = ["cleaning", "cooking", "fishing", "hanging out", "hiking", "learning English", "shopping", "studying", "sweeping"]
@@ -60,20 +63,30 @@ const Item = ( item : ItemProps ) => {
   )
 }
 
-export function ToDo(): JSX.Element {
+interface TodoProps extends LoadingChildProps, NetworkInfoChildProps {}
+
+function ToDo(props: TodoProps) {
+  const { isNetworkConnected, loadingView } = props
   const dispatch = useAppDispatch()
-  const realm = useRealm()
-  const data = useAppSelector(getTodos)
+  const data = useAppSelector(getToDos)
   const status = useAppSelector(getStatus)
-  const todosInRealm = useQuery(TodoRealmModelName)
+  const listOfTodoRealm = useQuery(TodoRealmName)
   
   const [selecting, setSelecting] = useState(false)
 
   useEffect(() => {
-    if (status === Status.IDLE) {
+    console.log('Alan - wrapped component - isNetworkConnected', isNetworkConnected)
+    if (status === Status.IDLE && isNetworkConnected) {
+      console.log('Alan - wrapped component - start fetching - time ', new Date())
       dispatch(fetchTodos())
     }
-  }, [dispatch, status])
+  }, [dispatch, status, isNetworkConnected])
+
+  useEffect(() => {
+    if (isNetworkConnected === false) {
+      // TODO: query list of ToDo from database
+    }
+  }, [isNetworkConnected])
 
   const onTapTodoItem = (item: Todo) => {
     dispatch(updateTodo({
@@ -90,10 +103,8 @@ export function ToDo(): JSX.Element {
       localTodoIndex = 0
     }
 
-    // dispatch(addTodo({ id: randomId(), name: localTodos[localTodoIndex], isFinished: false }))
-    // addTodoRO(randomId(), localTodos[localTodoIndex], false)
+    dispatch(addTodo({ id: randomId(), name: localTodos[localTodoIndex], isFinished: false }))
   }
-  console.log('Alan - query todos realm ', todosInRealm)
 
   const onTapMenuDeleteButton = () => {
     setSelecting(!selecting)
@@ -146,6 +157,8 @@ export function ToDo(): JSX.Element {
     )
   }
 
+  console.log('Alan - status ', status === Status.LOADING)
+
   return (
     <SafeAreaView style={ styles.container }>
       <View style={ styles.header }>
@@ -157,7 +170,7 @@ export function ToDo(): JSX.Element {
       </View>
       <View style={ styles.body }>
         {
-          status === Status.LOADING && renderLoadingView()
+          status === Status.LOADING && loadingView
         }
         {
           status === Status.FAILED && renderFailedCase()
@@ -174,3 +187,11 @@ export function ToDo(): JSX.Element {
     </SafeAreaView>
   )
 }
+
+const composeHOC = compose<React.FunctionComponent<object>>(
+  withRealmProvider,
+  withNetworkInfo,
+  withLoading
+)
+
+export const ToDoComponent: React.FunctionComponent<object> = composeHOC(ToDo)
