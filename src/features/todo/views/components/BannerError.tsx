@@ -1,6 +1,6 @@
 import React from "react"
 import { Text } from "react-native"
-import TransRightToLeftView from "../../../../components/transitionRightToLeftView"
+import TransRightToLeftView from "../../../../components/transitionRTL.component"
 import { styles } from '../style'
 
 const BannerError = () => (

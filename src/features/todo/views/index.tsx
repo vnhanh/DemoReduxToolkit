@@ -14,8 +14,8 @@ import Status from "../../../common/status"
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import BannerError from "./components/BannerError"
 import { TodoRealmName } from "../domain/todo.realm.model"
-import { NetworkInfoChildProps, withNetworkInfo } from "../../../hoc/NetworkInfoHOC"
-import withRealmProvider from "../../../hoc/RealmHOC"
+import { NetworkInfoChildProps, withNetworkInfo } from "../../../hoc/NetworkInfo.hoc"
+import withRealmProvider from "../../../hoc/RealmProvider.hoc"
 import withLoading, { LoadingChildProps } from "../../../hoc/Loading.hoc"
 
 
@@ -67,24 +67,30 @@ interface TodoProps extends LoadingChildProps, NetworkInfoChildProps {}
 
 function ToDo(props: TodoProps) {
   const { isNetworkConnected, loadingView } = props
+
+  // redux
   const dispatch = useAppDispatch()
   const data = useAppSelector(getToDos)
   const status = useAppSelector(getStatus)
+
+  // realm
   const listOfTodoRealm = useQuery(TodoRealmName)
   
-  const [selecting, setSelecting] = useState(false)
+  // interact with the delete menu button
+  const [chooseDeletedItems, setChooseDeletedItems] = useState(false)
 
   useEffect(() => {
-    console.log('Alan - wrapped component - isNetworkConnected', isNetworkConnected)
     if (status === Status.IDLE && isNetworkConnected) {
-      console.log('Alan - wrapped component - start fetching - time ', new Date())
       dispatch(fetchTodos())
     }
   }, [dispatch, status, isNetworkConnected])
 
   useEffect(() => {
     if (isNetworkConnected === false) {
+      console.log('Alan - ToDoComponent - network disconnected')
       // TODO: query list of ToDo from database
+    } else {
+      console.log('Alan - ToDoComponent - network connected')
     }
   }, [isNetworkConnected])
 
@@ -107,65 +113,64 @@ function ToDo(props: TodoProps) {
   }
 
   const onTapMenuDeleteButton = () => {
-    setSelecting(!selecting)
+    setChooseDeletedItems(!chooseDeletedItems)
   }
 
   const onTapDeleteTodoButton = (item: Todo) => {
     dispatch(deleteTodo(item.id))
   }
 
-  const renderLoadingView = () => (
-    <View style={ styles.loadingWrapper }>
-      <ActivityIndicator size="large" color={ colors.primary } />
-    </View>
-  )
-
-  const renderList = () => (
-    <FlatList
-      data={ data }
-      renderItem={ ({ item }) => {
-        if (selecting) {
-          return (
-            <Item
-              testID={ item.id }
-              name={ item.name }
-              checked={ item.isFinished }
-              onPressItem={ () => onTapTodoItem(item) }
-              onPressDeleteBtn={ () => onTapDeleteTodoButton(item) }/>
-          )
-        } else {
-          return (
-            <Item
-              testID={ item.id }
-              name={ item.name }
-              checked={ item.isFinished }
-              onPressItem={ () => onTapTodoItem(item) } />
-          )
-        }
-      } }
-      keyExtractor={ item => item.id }
-      style={ styles.list }
-    />
+  const renderMainScreen = () => (
+    <>
+      <FlatList
+        data={ data }
+        renderItem={ ({ item }) => {
+          if (chooseDeletedItems) {
+            return (
+              <Item
+                testID={ item.id }
+                name={ item.name }
+                checked={ item.isFinished }
+                onPressItem={ () => onTapTodoItem(item) }
+                onPressDeleteBtn={ () => onTapDeleteTodoButton(item) }/>
+            )
+          } else {
+            return (
+              <Item
+                testID={ item.id }
+                name={ item.name }
+                checked={ item.isFinished }
+                onPressItem={ () => onTapTodoItem(item) } />
+            )
+          }
+        } }
+        keyExtractor={ item => item.id }
+        style={ styles.list }
+      />
+      <TouchableOpacity
+        onPress={ onTapAddButton }
+        style={ styles.floatingBtn }>
+        <Text style={ styles.floatingBtnText }>+</Text>
+      </TouchableOpacity>
+    </>
   )
 
   const renderFailedCase = () => {
     return (
       <View>
         <BannerError />
-        { renderList() }
+        { renderMainScreen() }
       </View>
     )
   }
-
-  console.log('Alan - status ', status === Status.LOADING)
 
   return (
     <SafeAreaView style={ styles.container }>
       <View style={ styles.header }>
         <Text style={ styles.title }>TODOs</Text>
         <TouchableOpacity onPress={ onTapMenuDeleteButton } style={ styles.deleteBtn } >
-          { selecting && <Icon name="delete" size={ 30 } color={ colors.red500 } /> }
-          { !selecting && <Icon name="delete" size={ 30 } color={ colors.white } /> }
+          { chooseDeletedItems && <Icon name="delete" size={ 30 } color={ colors.red500 } /> }
+          { !chooseDeletedItems && <Icon name="delete" size={ 30 } color={ colors.white } /> }
         </TouchableOpacity>
       </View>
       <View style={ styles.body }>
@@ -176,13 +181,8 @@ function ToDo(props: TodoProps) {
           status === Status.FAILED && renderFailedCase()
         }
         {
-          status === Status.SUCCEEDED && renderList()
+          status === Status.SUCCEEDED && renderMainScreen()
         }
-        <TouchableOpacity
-          onPress={ onTapAddButton }
-          style={ styles.floatingBtn }>
-          <Text style={ styles.floatingBtnText }>+</Text>
-        </TouchableOpacity>
       </View>
     </SafeAreaView>
   )
@@ -190,8 +190,8 @@ function ToDo(props: TodoProps) {
 
 const composeHOC = compose<React.FunctionComponent<object>>(
   withRealmProvider,
+  withLoading,
   withNetworkInfo,
-  withLoading
 )
 
 export const ToDoComponent: React.FunctionComponent<object> = composeHOC(ToDo)
