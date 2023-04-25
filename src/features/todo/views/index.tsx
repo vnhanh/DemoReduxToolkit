@@ -16,7 +16,6 @@ import BannerError from "./components/BannerError"
 import { TodoRealmName } from "../domain/todo.realm.model"
 import { NetworkInfoChildProps, withNetworkInfo } from "../../../hoc/NetworkInfo.hoc"
 import withRealmProvider from "../../../hoc/RealmProvider.hoc"
-import withLoading, { LoadingChildProps } from "../../../hoc/Loading.hoc"
 
 
 let localTodoIndex = -1
@@ -63,10 +62,8 @@ const Item = ( item : ItemProps ) => {
   )
 }
 
-interface TodoProps extends LoadingChildProps, NetworkInfoChildProps {}
-
-function ToDo(props: TodoProps) {
-  const { isNetworkConnected, loadingView } = props
+function ToDo(props: NetworkInfoChildProps) {
+  const { isNetworkConnected } = props
 
   // redux
   const dispatch = useAppDispatch()
@@ -84,6 +81,9 @@ function ToDo(props: TodoProps) {
       dispatch(fetchTodos())
     }
   }, [dispatch, status, isNetworkConnected])
+
+  console.log('Alan - ToDoComponent - status ', status)
+  console.log('Alan - ToDoComponent - loadingView and networkConnection ', renderLoading, isNetworkConnected)
 
   useEffect(() => {
     if (isNetworkConnected === false) {
@@ -118,6 +118,38 @@ function ToDo(props: TodoProps) {
 
   const onTapDeleteTodoButton = (item: Todo) => {
     dispatch(deleteTodo(item.id))
+  }
+
+  /**
+   * RENDERs
+   */
+  const renderHeader = () => (
+    <View style={ styles.header }>
+      <Text style={ styles.title }>TODOs</Text>
+      {
+        status === Status.SUCCEEDED && (
+          <TouchableOpacity onPress={ onTapMenuDeleteButton } style={ styles.deleteBtn } >
+            { chooseDeletedItems && <Icon name="delete" size={ 30 } color={ colors.red500 } /> }
+            { !chooseDeletedItems && <Icon name="delete" size={ 30 } color={ colors.white } /> }
+          </TouchableOpacity>
+        )
+      }
+    </View>
+  )
+
+  const renderLoading = () => (
+    <View style={ styles.loadingWrapper }>
+      <ActivityIndicator size="large" color={ colors.primary } />
+    </View>
+  )
+
+  const renderFailedCase = () => {
+    return (
+      <View>
+        <BannerError />
+        { renderMainScreen() }
+      </View>
+    )
   }
 
   const renderMainScreen = () => (
@@ -155,27 +187,12 @@ function ToDo(props: TodoProps) {
     </>
   )
 
-  const renderFailedCase = () => {
-    return (
-      <View>
-        <BannerError />
-        { renderMainScreen() }
-      </View>
-    )
-  }
-
   return (
     <SafeAreaView style={ styles.container }>
-      <View style={ styles.header }>
-        <Text style={ styles.title }>TODOs</Text>
-        <TouchableOpacity onPress={ onTapMenuDeleteButton } style={ styles.deleteBtn } >
-          { chooseDeletedItems && <Icon name="delete" size={ 30 } color={ colors.red500 } /> }
-          { !chooseDeletedItems && <Icon name="delete" size={ 30 } color={ colors.white } /> }
-        </TouchableOpacity>
-      </View>
+      { renderHeader() }
       <View style={ styles.body }>
         {
-          status === Status.LOADING && loadingView
+          status === Status.LOADING && renderLoading()
         }
         {
           status === Status.FAILED && renderFailedCase()
@@ -190,7 +207,6 @@ function ToDo(props: TodoProps) {
 
 const composeHOC = compose<React.FunctionComponent<object>>(
   withRealmProvider,
-  withLoading,
   withNetworkInfo,
 )
 

@@ -7,6 +7,11 @@ export const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
   },
+  loadingWrapper: {
+    flex: 1,
+    alignContent: 'center',
+    justifyContent: 'center',
+  },
   header: {
     paddingHorizontal: 16,
     paddingVertical: 8,

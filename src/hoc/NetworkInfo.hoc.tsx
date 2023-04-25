@@ -9,6 +9,8 @@ export const withNetworkInfo = (Component: React.FC<NetworkInfoChildProps>) => {
   return function NetworkInfoComponent() {
     const [networkConnection, setNetworkConnection] = useState< boolean|null >( null )
     const netInfo = useNetInfo()
+
+    console.log('Alan - NetworkInfoHOC - props of component ', Component.prototype)
   
     useEffect(() => {
       console.log('Alan - withNetworkInfo() ', netInfo.isConnected, netInfo.isInternetReachable)
